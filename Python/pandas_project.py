@@ -30,3 +30,12 @@ plt.ylabel('Time')
 plt.grid(axis='y')
 plt.show()
 
+# third section
+df['Size_Num'] = df['Run time for different data size'].astype(str).str.replace('KB', '', regex=False).astype(int)
+
+filtered_df = df[(df['Size_Num'] >= 100) & (df['Size_Num'] <= 600)]
+
+# Calculating the average execution time of Algorithm 2
+mean_alg2 = filtered_df['Alg.2'].mean()
+
+print(f"Average execution time for Alg.2 (100KB - 600KB): {mean_alg2}")
