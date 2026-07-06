@@ -1,0 +1,363 @@
+\documentclass[12pt,a4paper]{article}
+
+% ==================== Packages ====================
+\usepackage[
+top=2.2cm,
+bottom=2.3cm,
+left=2.2cm,
+right=2.2cm
+]{geometry}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{xepersian}
+
+% ==================== Fonts ====================
+\settextfont{Yas}
+\setdigitfont{Yas}
+\setlatintextfont{Times New Roman}
+
+% ==================== Colors ====================
+\definecolor{ink}{RGB}{28,32,38}
+\definecolor{navy}{RGB}{18,45,78}
+\definecolor{teal}{RGB}{0,126,132}
+\definecolor{muted}{RGB}{104,112,122}
+\definecolor{paper}{RGB}{247,248,250}
+\definecolor{line}{RGB}{220,225,231}
+
+% ==================== General Style ====================
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=teal,
+	urlcolor=teal
+}
+
+\captionsetup{
+	font=small,
+	labelfont=bf,
+	justification=centering
+}
+
+\setlist[itemize]{
+	topsep=0.2em,
+	itemsep=0.25em,
+	rightmargin=1.4em
+}
+
+% ==================== Section Style ====================
+\titleformat{\section}
+{\Large\bfseries\color{navy}}
+{\thesection}
+{0.6em}
+{}
+[\vspace{-0.25em}{\color{teal}\titlerule[0.9pt]}]
+
+\titleformat{\subsection}
+{\large\bfseries\color{ink}}
+{\thesubsection}
+{0.6em}
+{}
+
+\titleformat{\subsubsection}
+{\normalsize\bfseries\color{teal}}
+{}
+{0pt}
+{}
+
+% ==================== Boxes ====================
+\tcbset{
+	sharp corners,
+	boxrule=0pt,
+	left=9pt,
+	right=9pt,
+	top=8pt,
+	bottom=8pt,
+	colback=paper,
+	colframe=paper
+}
+
+\newtcolorbox{summarybox}{
+	colback=paper,
+	borderline west={3pt}{0pt}{teal}
+}
+
+\newtcolorbox{resultbox}{
+	colback=white,
+	borderline west={3pt}{0pt}{navy},
+	boxrule=0.5pt,
+	colframe=line
+}
+
+% ==================== Document ====================
+\begin{document}
+	
+	% ==================== Cover ====================
+	\begin{titlepage}
+
+		
+		\vspace*{1.7cm}
+		
+		{\Huge\bfseries\color{navy} گزارش پروژه سوم\par}
+		\vspace{0.35cm}
+		{\Large\bfseries نرم‌افزار ریاضی\par}
+		
+		\vspace{1.1cm}
+		
+		{\color{teal}\rule{0.58\textwidth}{1.4pt}}
+		
+		\vspace{1.2cm}
+		
+		\begin{summarybox}
+			\Large
+			این گزارش شامل پیاده‌سازی و تحلیل سه مسئله عددی است:  
+			درونیابی، تحلیل زمان اجرای الگوریتم‌ها و محاسبه عددی انتگرال.
+		\end{summarybox}
+		
+		\vspace{1.4cm}
+		
+		\begin{tabular}{rl}
+			\textbf{نام دانشجو:} & محمد جواد مسگرها \\[0.35cm]
+			\textbf{شماره دانشجویی:} & 40312043 \\[0.35cm]
+			\textbf{موضوع:} & \lr{Numerical Methods} \\[0.35cm]
+			\textbf{مخزن پروژه:} &
+\href{https://github.com/JaVaD15Mesgarha/mathematics_softwares_project}
+{\lr{\texttt{GitHub Repository}}}
+
+		\end{tabular}
+		
+		\vfill
+		
+		{\color{muted}\today}
+		
+	\end{titlepage}
+	
+	\tableofcontents
+	\newpage
+	
+	% ==================== Intro ====================
+	\section*{چکیده گزارش}
+	\addcontentsline{toc}{section}{چکیده گزارش}
+	
+	در این پروژه، سه بخش اصلی از محاسبات عددی بررسی شده است. ابتدا دو روش درونیابی لاگرانژ و اسپلاین مکعبی روی یک مجموعه داده مقایسه می‌شوند. سپس زمان اجرای سه الگوریتم با استفاده از داده‌های فایل اکسل تحلیل می‌شود. در پایان نیز انتگرال تابع
+	$e^{x^2}$
+	با روش‌های ذوزنقه‌ای، سیمپسون و گاوس-لژاندر محاسبه و از نظر دقت مقایسه می‌شود.
+	
+	% ==================== Question 1 ====================
+	\section{درونیابی لاگرانژ و اسپلاین مکعبی}
+	
+	\begin{summarybox}
+		هدف این بخش، ساخت تابعی است که از نقاط داده‌شده عبور کند و رفتار دو روش لاگرانژ و اسپلاین مکعبی از نظر نوسان و پایداری مقایسه شود.
+	\end{summarybox}
+	
+	نقاط مورد بررسی عبارت‌اند از:
+	\[
+	(1,1),\ (2,3),\ (3,5),\ (4,8),\ (5,5),\ (6,2)
+	\]
+	
+	برای این داده‌ها، روش لاگرانژ یک چندجمله‌ای سراسری می‌سازد، اما اسپلاین مکعبی تابع را به‌صورت تکه‌ای و با چندجمله‌ای‌های درجه سه مدل می‌کند. هر دو روش در گره‌های اصلی خطای صفر دارند.
+	
+	\subsection{خروجی عددی}
+	
+	چندجمله‌ای لاگرانژ حاصل به صورت زیر است:
+	\begin{equation}
+		P(x)=
+		0.175x^5
+		-2.958x^4
+		+18.375x^3
+		-52.041x^2
+		+68.45x
+		-31.0
+	\end{equation}
+	
+	در اسپلاین مکعبی، برای هر بازه یک تابع جداگانه ساخته می‌شود. نمونه قطعه اول در بازه
+	$[1,2]$
+	برابر است با:
+	\begin{equation}
+		S_0(x)=
+		-0.186x^3
+		+0.559x^2
+		+1.626x
+		-1.0
+	\end{equation}
+	
+	\subsection{تحلیل}
+	
+	\begin{resultbox}
+		لاگرانژ به دلیل سراسری بودن، در برخی نواحی مخصوصاً نزدیک انتهای بازه نوسان بیشتری دارد. در مقابل، اسپلاین مکعبی به دلیل ساختار تکه‌ای، منحنی نرم‌تر و کنترل‌شده‌تری تولید می‌کند. بنابراین برای داده‌های تجربی، اسپلاین انتخاب مطمئن‌تری است.
+	\end{resultbox}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.84\textwidth]{../outputs/figures/question1_interpolation_v2.png}
+		\caption{مقایسه درونیابی لاگرانژ و اسپلاین مکعبی}
+	\end{figure}
+	
+	\newpage
+	
+	% ==================== Question 2 ====================
+	\section{تحلیل زمان اجرای الگوریتم‌ها}
+	
+	\begin{summarybox}
+		در این بخش زمان اجرای سه الگوریتم برای داده‌هایی با اندازه
+		$100$
+		تا
+		$700\,\text{KB}$
+		بررسی شده و رفتار آن‌ها با نمودارهای خطی، میله‌ای و جعبه‌ای تحلیل می‌شود.
+	\end{summarybox}
+	
+	داده‌ها از فایل اکسل خوانده شده‌اند و پیاده‌سازی به‌گونه‌ای انجام شده که با اضافه شدن داده‌های جدید، محاسبات و نمودارها بدون تغییر اساسی به‌روزرسانی شوند.
+	
+	\subsection{روش کار}
+	
+	داده‌ها با
+	\lr{pandas.read\_excel}
+	وارد برنامه شدند. سپس برای هر الگوریتم، شاخص‌های آماری شامل میانگین، میانه و انحراف معیار محاسبه شد. برای نمایش بهتر، سه نمودار تولید شد:
+	
+	\begin{itemize}
+		\item نمودار خطی برای بررسی روند رشد زمان اجرا
+		\item نمودار میله‌ای برای مقایسه مستقیم الگوریتم‌ها
+		\item نمودار جعبه‌ای برای تحلیل پراکندگی داده‌ها
+	\end{itemize}
+	
+	\subsection{مقایسه الگوریتم‌ها}
+	
+	\begin{resultbox}
+		\textbf{\lr{Alg.1}} سریع‌ترین و پایدارترین الگوریتم است. زمان اجرای آن از
+		$50\,\text{ms}$
+		تا
+		$80\,\text{ms}$
+		تغییر می‌کند و رشد بسیار آرامی دارد.
+	\end{resultbox}
+	
+	\begin{resultbox}
+		\textbf{\lr{Alg.2}} در ابتدا کندتر است، اما شیب رشد آن کنترل‌شده باقی می‌ماند. این الگوریتم برای ورودی‌های متوسط و بزرگ رفتار قابل قبولی دارد.
+	\end{resultbox}
+	
+	\begin{resultbox}
+		\textbf{\lr{Alg.3}} در ورودی‌های کوچک عملکرد نسبتاً مناسبی دارد، اما با افزایش حجم داده، زمان اجرای آن سریع رشد می‌کند و در ورودی‌های بزرگ ضعیف‌تر ظاهر می‌شود.
+	\end{resultbox}
+	
+	\subsection{نمودارها}
+	
+	نمودار خطی نشان می‌دهد که
+	\lr{Alg.1}
+	در تمام اندازه‌ها بهترین عملکرد را دارد. همچنین تقاطع
+	\lr{Alg.2}
+	و
+	\lr{Alg.3}
+	نشان می‌دهد که انتخاب الگوریتم می‌تواند به اندازه ورودی وابسته باشد.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.84\textwidth]{../outputs/figures/question2_line_chart.png}
+		\caption{نمودار خطی زمان اجرای الگوریتم‌ها}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.84\textwidth]{../outputs/figures/question2_bar_chart.png}
+		\caption{نمودار میله‌ای مقایسه زمان اجرا}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.84\textwidth]{../outputs/figures/question2_box_plot.png}
+		\caption{نمودار جعبه‌ای پراکندگی زمان اجرا}
+	\end{figure}
+	
+	\subsection{میانگین زمان اجرای الگوریتم دوم}
+	
+	برای بازه
+	$100$
+	تا
+	$600\,\text{KB}$
+	مقادیر زمان اجرای
+	\lr{Alg.2}
+	برابرند با:
+	\[
+	200,\ 220,\ 240,\ 260,\ 280,\ 300
+	\]
+	
+	بنابراین:
+	\[
+	\text{Average}
+	=
+	\frac{200+220+240+260+280+300}{6}
+	=
+	250.0\,\text{ms}
+	\]
+	
+	\newpage
+	
+	% ==================== Question 3 ====================
+	\section{محاسبه عددی انتگرال}
+	
+	\begin{summarybox}
+		در این بخش مقدار انتگرال
+		$\int_0^1 e^{x^2}\,dx$
+		با سه روش عددی محاسبه شده و خطای هر روش نسبت به مقدار مرجع بررسی می‌شود.
+	\end{summarybox}
+	
+	مقدار مرجع انتگرال برابر است با:
+	\[
+	1.462651745907
+	\]
+	
+	این مقدار با استفاده از
+	\lr{scipy.integrate.quad}
+	به دست آمده و مبنای محاسبه خطای مطلق قرار گرفته است.
+	
+	\subsection{روش‌های استفاده‌شده}
+	
+	سه روش زیر پیاده‌سازی شدند:
+	
+	\begin{itemize}
+		\item روش ذوزنقه‌ای مرکب
+		\item روش سیمپسون یک‌سوم مرکب
+		\item روش گاوس-لژاندر
+	\end{itemize}
+	
+	\subsection{تحلیل دقت}
+	
+	\begin{resultbox}
+		روش ذوزنقه‌ای ساده‌ترین روش است، اما مرتبه خطای آن
+		$O(h^2)$
+		است و برای رسیدن به دقت بالا به تعداد زیربازه بیشتری نیاز دارد.
+	\end{resultbox}
+	
+	\begin{resultbox}
+		روش سیمپسون با مرتبه خطای
+		$O(h^4)$
+		دقیق‌تر از ذوزنقه‌ای است و با تعداد تقسیم‌بندی کمتر، خطای بسیار پایین‌تری تولید می‌کند.
+	\end{resultbox}
+	
+	\begin{resultbox}
+		روش گاوس-لژاندر بهترین عملکرد را دارد. چون نقاط و وزن‌ها بهینه انتخاب می‌شوند، برای تابعی هموار مانند
+		$e^{x^2}$
+		با تعداد کمی ارزیابی تابع به دقت بسیار بالا می‌رسد.
+	\end{resultbox}
+	
+	\subsection{نتیجه}
+	
+	برای این مسئله، روش گاوس-لژاندر دقیق‌ترین و کارآمدترین روش است. اگر داده‌ها به‌صورت جدولی و با فاصله‌های مساوی باشند، سیمپسون گزینه مناسبی است. روش ذوزنقه‌ای نیز از نظر آموزشی و پیاده‌سازی ساده است، اما از نظر دقت ضعیف‌تر عمل می‌کند.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.84\textwidth]{../outputs/figures/question3_integration.png}
+		\caption{نمایش تابع و مقایسه خطای روش‌های انتگرال‌گیری}
+	\end{figure}
+	
+\end{document}
